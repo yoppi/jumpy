@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 
 	"github.com/moovweb/gokogiri"
+	html "github.com/moovweb/gokogiri/html"
 )
 
 type Fetcher interface {
@@ -42,18 +44,24 @@ func NewFetcher(bucket *Bucket, linkCh chan string, pageCh chan *Page, callbackP
 	return f
 }
 
-func (f *fetcher) Fetch(url string) (*Page, error) {
-	resp, err := http.Get(url)
+func (f *fetcher) Fetch(link string) (*Page, error) {
+	resp, err := http.Get(link)
 	if err != nil {
 		fmt.Printf("%v\n", err)
 		return nil, err
 	}
 	defer resp.Body.Close()
 
-	return f.parseBody(resp)
+	doc, parseErr := f.parseBody(resp)
+	if parseErr != nil {
+		return nil, parseErr
+	}
+
+	linkUrl, _ := url.Parse(link)
+	return NewPage(linkUrl, doc), nil
 }
 
-func (f *fetcher) parseBody(resp *http.Response) (*Page, error) {
+func (f *fetcher) parseBody(resp *http.Response) (*html.HtmlDocument, error) {
 	body, readErr := ioutil.ReadAll(resp.Body)
 	if readErr != nil {
 		fmt.Printf("%v\n", readErr)
@@ -66,6 +74,6 @@ func (f *fetcher) parseBody(resp *http.Response) (*Page, error) {
 		return nil, parseErr
 	}
 
-	return NewPage(resp.Request.URL, doc), nil
+	return doc, nil
 }
 
