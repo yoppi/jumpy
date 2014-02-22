@@ -2,9 +2,17 @@ package jumpy
 
 import (
 	"net/url"
+	"runtime"
 )
 
 var options map[string]string
+
+func setup() {
+	numCpu := runtime.NumCPU()
+	if runtime.GOMAXPROCS(0) < numCpu {
+		runtime.GOMAXPROCS(numCpu)
+	}
+}
 
 // Start crawling at rootUrl
 func Crawl(rootUrl string, options map[string]string, callback func(*Page)) {
@@ -13,6 +21,7 @@ func Crawl(rootUrl string, options map[string]string, callback func(*Page)) {
 		panic(err)
 	}
 
+	setup()
 	// TODO: Handle options
 	options = options
 
@@ -25,7 +34,7 @@ func Crawl(rootUrl string, options map[string]string, callback func(*Page)) {
 	for {
 		select {
 		case page := <-callbackPageCh:
-			go callback(page)
+			callback(page)
 			crawler.pageCh <- page
 		case <-stop:
 			return
