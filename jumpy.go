@@ -14,7 +14,6 @@ func setup() {
 	}
 }
 
-// Start crawling at rootUrl
 func Crawl(rootUrl string, options map[string]string, callback func(*Page)) {
 	root, err := url.Parse(rootUrl)
 	if err != nil {
