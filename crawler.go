@@ -19,14 +19,22 @@ type Crawler struct {
 func NewCrawler(rootUrl *url.URL, callbackPageCh chan *Page, stop chan int) *Crawler {
 	pageCh := make(chan *Page, 10000)
 	linkCh := make(chan string, 10000)
-	backet := NewBucket()
+	bucket := NewBucket()
 	fetchers := make([]Fetcher, runtime.GOMAXPROCS(0))
 	for i := 0; i < runtime.GOMAXPROCS(0); i++ {
-		fetchers = append(fetchers, NewFetcher(backet, linkCh, pageCh, callbackPageCh))
+		fetchers = append(fetchers, NewFetcher(bucket, linkCh, pageCh, callbackPageCh))
 	}
-	parser := NewParser(backet, pageCh, linkCh)
+	parser := NewParser(bucket, pageCh, linkCh)
 
-	return &Crawler{rootUrl, fetchers, parser, callbackPageCh, pageCh, linkCh, stop}
+	return &Crawler{
+		RootUrl: rootUrl,
+		Fetchers: fetchers,
+		Parser: parser,
+		callbackPageCh: callbackPageCh,
+		pageCh: pageCh,
+		linkCh: linkCh,
+		stop: stop,
+	}
 }
 
 func (c *Crawler) crawl() {
