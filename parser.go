@@ -1,5 +1,9 @@
 package jumpy
 
+import(
+	. "github.com/ahmetalpbalkan/go-linq"
+)
+
 type Parser struct {
 	pageCh chan *Page
 	linkCh chan string
@@ -13,9 +17,12 @@ func NewParser(bucket *Bucket, pageCh chan *Page, linkCh chan string) *Parser {
 		for {
 			select {
 			case page := <-pageCh:
-				// TODO: need uniquify?
-				for _, link := range page.Links() {
-					parser.linkCh <- link
+				links, err := From(page.Links()).Distinct().Results()
+				if err != nil {
+					continue
+				}
+				for _, link := range links {
+					parser.linkCh <- link.(string)
 				}
 			}
 		}
