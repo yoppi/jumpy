@@ -24,7 +24,7 @@ func NewCrawler(rootUrl *url.URL, callbackPageCh chan *Page, stop chan int) *Cra
 	for i := 0; i < runtime.GOMAXPROCS(0); i++ {
 		fetchers = append(fetchers, NewFetcher(bucket, linkCh, pageCh, callbackPageCh))
 	}
-	parser := NewParser(bucket, pageCh, linkCh)
+	parser := NewParser(pageCh, linkCh)
 
 	return &Crawler{
 		RootUrl: rootUrl,

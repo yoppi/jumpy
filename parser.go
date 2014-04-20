@@ -7,11 +7,10 @@ import(
 type Parser struct {
 	pageCh chan *Page
 	linkCh chan string
-	Bucket *Bucket
 }
 
-func NewParser(bucket *Bucket, pageCh chan *Page, linkCh chan string) *Parser {
-	parser := &Parser{pageCh, linkCh, bucket}
+func NewParser(pageCh chan *Page, linkCh chan string) *Parser {
+	parser := &Parser{pageCh, linkCh}
 
 	go func() {
 		for {
