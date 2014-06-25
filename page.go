@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"net/url"
-	"path"
 
 	html "github.com/moovweb/gokogiri/html"
 )
@@ -38,47 +37,16 @@ func (p *Page) Links() []string {
 }
 
 func (p *Page) Normalize(link string) (string, bool) {
-	linkUrl, err := url.Parse(link)
+	normalized, err := p.Url.Parse(link)
 	if err != nil {
 		log.Printf("parse error url[%v]\n", link)
 		return "", false
 	}
 
-	if linkUrl.Host == "" {
-		if linkUrl.Path == "/" {
-			return "", false
-		}
-		if linkUrl.Path == "" {
-			return "", false
-		}
-		if string(linkUrl.Path[0]) == "/" {
-			return p.Url.Scheme + "://" + p.Url.Host + p.NormalizePath(linkUrl.Path), true
-		} else {
-			pageUrl := p.Url.String()
-			if string(pageUrl[len(pageUrl)-1]) != "/" {
-				pageUrl += "/"
-			}
-			return pageUrl + link, true
-		}
-	}
-
-	if linkUrl.Host != p.Url.Host {
+	if normalized.Host != p.Url.Host {
 		return "", false
 	}
 
-	if linkUrl.Scheme == "javascript" {
-		return "", false
-	}
-
-	return linkUrl.Scheme +"://" + linkUrl.Host + p.NormalizePath(linkUrl.Path), true
+	return normalized.String(), true
 }
 
-func (p *Page) NormalizePath(_path string) string {
-	ret := path.Clean(_path)
-
-	if string(_path[len(_path) - 1]) == "/" {
-		ret += "/"
-	}
-
-	return ret
-}
