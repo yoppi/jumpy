@@ -20,9 +20,9 @@ func NewPage(url *url.URL, doc *html.HtmlDocument) *Page {
 func (p *Page) Links() []string {
 	var links []string
 
-	nodes, searchErr := p.Doc.Search("//a[@href]")
-	if searchErr != nil {
-		fmt.Printf("%v", searchErr)
+	nodes, err := p.Doc.Search("//a[@href]")
+	if err != nil {
+		fmt.Printf("%v", err)
 		return links
 	}
 

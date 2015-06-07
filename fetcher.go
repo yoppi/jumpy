@@ -57,28 +57,28 @@ func (f *fetcher) Fetch(link string) (*Page, error) {
 	}
 	defer resp.Body.Close()
 
-	doc, parseErr := f.parseBody(resp)
-	if parseErr != nil {
-		return nil, parseErr
+	doc, err := f.parseBody(resp)
+	if err != nil {
+		return nil, err
 	}
 
 	linkUrl, _ := url.Parse(link)
+
 	return NewPage(linkUrl, doc), nil
 }
 
 func (f *fetcher) parseBody(resp *http.Response) (*html.HtmlDocument, error) {
-	body, readErr := ioutil.ReadAll(resp.Body)
-	if readErr != nil {
-		fmt.Printf("%v\n", readErr)
-		return nil, readErr
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		return nil, err
 	}
 
-	doc, parseErr := gokogiri.ParseHtml(body)
-	if parseErr != nil {
-		fmt.Printf("%v\n", parseErr)
-		return nil, parseErr
+	doc, err := gokogiri.ParseHtml(body)
+	if err != nil {
+		fmt.Printf("%v\n", err)
+		return nil, err
 	}
 
 	return doc, nil
 }
-
