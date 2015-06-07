@@ -7,13 +7,13 @@ import (
 )
 
 type Crawler struct {
-	RootUrl *url.URL
-	Fetchers []Fetcher
-	Parser *Parser
+	RootUrl        *url.URL
+	Fetchers       []Fetcher
+	Parser         *Parser
 	callbackPageCh chan *Page
-	pageCh chan *Page
-	linkCh chan string
-	stop chan int
+	pageCh         chan *Page
+	linkCh         chan string
+	stop           chan int
 }
 
 func NewCrawler(rootUrl *url.URL, callbackPageCh chan *Page, stop chan int) *Crawler {
@@ -27,13 +27,13 @@ func NewCrawler(rootUrl *url.URL, callbackPageCh chan *Page, stop chan int) *Cra
 	parser := NewParser(pageCh, linkCh)
 
 	return &Crawler{
-		RootUrl: rootUrl,
-		Fetchers: fetchers,
-		Parser: parser,
+		RootUrl:        rootUrl,
+		Fetchers:       fetchers,
+		Parser:         parser,
 		callbackPageCh: callbackPageCh,
-		pageCh: pageCh,
-		linkCh: linkCh,
-		stop: stop,
+		pageCh:         pageCh,
+		linkCh:         linkCh,
+		stop:           stop,
 	}
 }
 

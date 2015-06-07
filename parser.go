@@ -1,6 +1,6 @@
 package jumpy
 
-import(
+import (
 	. "github.com/ahmetalpbalkan/go-linq"
 )
 

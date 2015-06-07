@@ -49,4 +49,3 @@ func (p *Page) Normalize(link string) (string, bool) {
 
 	return normalized.String(), true
 }
-

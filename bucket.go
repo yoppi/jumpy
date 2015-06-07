@@ -48,12 +48,10 @@ func NewBucket() *Bucket {
 	return &Bucket{storage}
 }
 
-func (b *Bucket) Exist(url string) bool{
+func (b *Bucket) Exist(url string) bool {
 	return b.Storage.Exist(url)
 }
 
 func (b *Bucket) Add(url string, page *Page) {
 	b.Storage.Add(url, page)
 }
-
-

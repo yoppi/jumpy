@@ -1,15 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"flag"
+	"fmt"
 
 	"github.com/yoppi/jumpy"
 )
 
 var (
-	command string
-	rootUrl string
+	command  string
+	rootUrl  string
 	commands map[string]func(*jumpy.Page)
 )
 
@@ -30,6 +30,6 @@ func main() {
 	}
 
 	if f, ok := commands[command]; ok {
-		jumpy.Crawl(rootUrl, map[string]string{}, f);
+		jumpy.Crawl(rootUrl, map[string]string{}, f)
 	}
 }

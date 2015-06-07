@@ -16,14 +16,19 @@ type Fetcher interface {
 
 type fetcher struct {
 	Fetcher
-	linkCh chan string
-	pageCh chan *Page
+	linkCh         chan string
+	pageCh         chan *Page
 	callbackPageCh chan *Page
-	Bucket *Bucket
+	Bucket         *Bucket
 }
 
 func NewFetcher(bucket *Bucket, linkCh chan string, pageCh chan *Page, callbackPageCh chan *Page) *fetcher {
-	f := &fetcher{Bucket: bucket, linkCh: linkCh, pageCh: pageCh, callbackPageCh: callbackPageCh}
+	f := &fetcher{
+		Bucket:         bucket,
+		linkCh:         linkCh,
+		pageCh:         pageCh,
+		callbackPageCh: callbackPageCh,
+	}
 
 	go func() {
 		for {
